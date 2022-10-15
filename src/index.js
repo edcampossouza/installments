@@ -8,6 +8,8 @@ function installments(principal, n, options) {
   let installmentValue;
   switch (roundMode) {
     case "ROUND_DOWN":
+    case "SPREAD_BEGIN":
+    case "SPREAD_END":
       installmentValue =
         Math.floor((principal * centsPerUnit) / n) / centsPerUnit;
       break;
@@ -18,7 +20,7 @@ function installments(principal, n, options) {
     default:
       return "NOT IMPLEMENTED";
   }
-  const residual = principal - n * installmentValue;
+  let residual = Math.round((principal - n * installmentValue) * centsPerUnit);
 
   if (dueDateMode === "FIXED_INTERVAL") {
     let ret = [];
@@ -30,6 +32,23 @@ function installments(principal, n, options) {
         due: new Date(date),
       });
       date.setDate(date.getDate() + daysBetweenInstallments);
+    }
+    if (roundMode === "SPREAD_BEGIN") {
+      let i = 0;
+      while (residual > 0) {
+        residual -= 1;
+        ret[i].value =
+          Math.round(ret[i].value * centsPerUnit + 1) / centsPerUnit;
+        i++;
+      }
+    } else if (roundMode === "SPREAD_END") {
+      let i = ret.length - 1;
+      while (residual > 0) {
+        residual -= 1;
+        ret[i].value =
+          Math.round(ret[i].value * centsPerUnit + 1) / centsPerUnit;
+        i--;
+      }
     }
     return ret;
   } else return "NOT IMPLEMENTED";
