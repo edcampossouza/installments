@@ -1,0 +1,11 @@
+{
+  "name": "@edsouza/installments",
+  "version": "1.0.0",
+  "description": "Helper functions to calculate values and due dates of installments",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "edcampossouza@gmail.com",
+  "license": "ISC"
+}
