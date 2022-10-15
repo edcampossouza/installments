@@ -4,8 +4,11 @@
   "description": "Helper functions to calculate values and due dates of installments",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "edcampossouza@gmail.com",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.2.0"
+  }
 }
