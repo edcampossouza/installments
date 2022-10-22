@@ -62,11 +62,9 @@ function installments(principal, n, options) {
       i--;
     }
   } else if (roundMode === "LUMP_FIRST") {
-    console.log("res", residual);
     ret[0].value =
       Math.round(ret[0].value * centsPerUnit + residual) / centsPerUnit;
   } else if (roundMode === "LUMP_LAST") {
-    console.log("res", residual);
     ret[ret.length - 1].value =
       Math.round(ret[0].value * centsPerUnit + residual) / centsPerUnit;
   }
