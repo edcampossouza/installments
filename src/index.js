@@ -4,6 +4,7 @@ function installments(principal, n, options) {
   const daysBetweenInstallments = options.daysBetweenInstallments || 30;
   const dueDateMode = options.dueDateMode || "FIXED_INTERVAL";
 
+  initialDate.setHours(0, 0, 0, 0);
   const centsPerUnit = 100;
   let installmentValue;
   switch (roundMode) {
@@ -22,8 +23,8 @@ function installments(principal, n, options) {
   }
   let residual = Math.round((principal - n * installmentValue) * centsPerUnit);
 
+  let ret = [];
   if (dueDateMode === "FIXED_INTERVAL") {
-    let ret = [];
     let date = initialDate;
     date.setDate(date.getDate() + daysBetweenInstallments);
     for (let i = 0; i < n; i++) {
@@ -33,25 +34,33 @@ function installments(principal, n, options) {
       });
       date.setDate(date.getDate() + daysBetweenInstallments);
     }
-    if (roundMode === "SPREAD_BEGIN") {
-      let i = 0;
-      while (residual > 0) {
-        residual -= 1;
-        ret[i].value =
-          Math.round(ret[i].value * centsPerUnit + 1) / centsPerUnit;
-        i++;
-      }
-    } else if (roundMode === "SPREAD_END") {
-      let i = ret.length - 1;
-      while (residual > 0) {
-        residual -= 1;
-        ret[i].value =
-          Math.round(ret[i].value * centsPerUnit + 1) / centsPerUnit;
-        i--;
-      }
+  } else if (dueDateMode === "FIXED_DAY_OF_MONTH") {
+    let date = initialDate;
+    date.setMonth(date.getMonth() + 1);
+    for (let i = 0; i < n; i++) {
+      ret.push({
+        value: installmentValue,
+        due: new Date(date),
+      });
+      date.setMonth(date.getMonth() + 1);
     }
-    return ret;
   } else return "NOT IMPLEMENTED";
+  if (roundMode === "SPREAD_BEGIN") {
+    let i = 0;
+    while (residual > 0) {
+      residual -= 1;
+      ret[i].value = Math.round(ret[i].value * centsPerUnit + 1) / centsPerUnit;
+      i++;
+    }
+  } else if (roundMode === "SPREAD_END") {
+    let i = ret.length - 1;
+    while (residual > 0) {
+      residual -= 1;
+      ret[i].value = Math.round(ret[i].value * centsPerUnit + 1) / centsPerUnit;
+      i--;
+    }
+  }
+  return ret;
 }
 
 module.exports = installments;
