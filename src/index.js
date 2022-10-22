@@ -11,6 +11,8 @@ function installments(principal, n, options) {
     case "ROUND_DOWN":
     case "SPREAD_BEGIN":
     case "SPREAD_END":
+    case "LUMP_FIRST":
+    case "LUMP_LAST":
       installmentValue =
         Math.floor((principal * centsPerUnit) / n) / centsPerUnit;
       break;
@@ -59,6 +61,14 @@ function installments(principal, n, options) {
       ret[i].value = Math.round(ret[i].value * centsPerUnit + 1) / centsPerUnit;
       i--;
     }
+  } else if (roundMode === "LUMP_FIRST") {
+    console.log("res", residual);
+    ret[0].value =
+      Math.round(ret[0].value * centsPerUnit + residual) / centsPerUnit;
+  } else if (roundMode === "LUMP_LAST") {
+    console.log("res", residual);
+    ret[ret.length - 1].value =
+      Math.round(ret[0].value * centsPerUnit + residual) / centsPerUnit;
   }
   return ret;
 }

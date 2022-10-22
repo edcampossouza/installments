@@ -89,3 +89,35 @@ test("basic installment monthly", () => {
     })
   ).toEqual(installment);
 });
+
+test("basic installment lump first", () => {
+  let installment = generateDatesMonthly(13, new Date(), true);
+  installment = installment.map((inst, j) => ({
+    ...inst,
+    value: 15.38,
+  }));
+  installment[0].value = 15.44;
+
+  expect(
+    installments(200, 13, {
+      roundMode: "LUMP_FIRST",
+      dueDateMode: "FIXED_DAY_OF_MONTH",
+    })
+  ).toEqual(installment);
+});
+
+test("basic installment lump last", () => {
+  let installment = generateDatesMonthly(17, new Date(), true);
+  installment = installment.map((inst, j) => ({
+    ...inst,
+    value: 1.17,
+  }));
+  installment[16].value = 1.28;
+
+  expect(
+    installments(20, 17, {
+      roundMode: "LUMP_LAST",
+      dueDateMode: "FIXED_DAY_OF_MONTH",
+    })
+  ).toEqual(installment);
+});
